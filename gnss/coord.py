@@ -1,4 +1,9 @@
 
+''' 
+(c) 2017 Oleksandr Bogomaz
+based on the code written by Glenn D. MacGougan (GDM), http://gnsstk.sourceforge.net
+''' 
+
 import math
 
 class ELLIPSE:
