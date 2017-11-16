@@ -1,7 +1,9 @@
 
 ''' 
 (c) 2017 Oleksandr Bogomaz
-based on the code written by Glenn D. MacGougan (GDM), http://gnsstk.sourceforge.net
+Based on the code written by Glenn D. MacGougan (GDM), http://gnsstk.sourceforge.net
+
+Utilities for coordinates converting.
 ''' 
 
 import math
