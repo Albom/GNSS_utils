@@ -26,10 +26,10 @@ class Header:
     END_OF_HEADER = 'END OF HEADER'
     _version = ''
 
-    def getVersion(self):
+    def get_version(self):
         return self._version
 
-    def setVersion(self, version):
+    def set_version(self, version):
         self._version = version
 
 
@@ -41,12 +41,11 @@ def read_obs(filename):
     while True:
         line = lines[i]
         description = line[60:-1].strip()
-        print(description)
         if description == Header.END_OF_HEADER:
             break
         elif description == Header.RINEX_VERSION_TYPE:
-            header.setVersion(line[:9].strip())
+            header.set_version(line[:9].strip())
         i += 1
 
-    print(header.getVersion())
+    print(header.get_version())
     return
