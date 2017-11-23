@@ -16,9 +16,11 @@ class ELLIPSE:
     E2 = 0.00669438002290069
 
 
-def xyz(lat, long, height):
-    lat *= math.pi/180.0
-    long *= math.pi/180.0
+def xyz(**kwargs):
+    rad = math.pi/180.0
+    lat = kwargs['lat']*rad
+    long = kwargs['long']*rad
+    height = kwargs['height']
     n = ELLIPSE.A / math.sqrt(1 - ELLIPSE.E2*math.sin(lat)**2)
     x = (n + height) * math.cos(lat) * math.cos(long)
     y = (n + height) * math.cos(lat) * math.sin(long)
@@ -26,7 +28,10 @@ def xyz(lat, long, height):
     return {'x': x, 'y': y, 'z': z}
 
 
-def geo(x, y, z):
+def geo(**kwargs):
+    x = kwargs['x']
+    y = kwargs['y']
+    z = kwargs['z']
     eps = 1e-4
     deg = 180.0/math.pi
     if (math.fabs(x) < eps) & (math.fabs(y) < eps):
