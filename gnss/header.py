@@ -27,6 +27,8 @@ class Header:
     _version = ''
     _type = ''
     _pos = {'x': 0, 'y': 0, 'z': 0}
+    _num_of_obs = 0
+    _types_of_obs = []
 
     def get_version(self):
         return self._version
@@ -45,3 +47,15 @@ class Header:
 
     def set_pos(self, _pos):
         self._pos = _pos
+
+    def get_num_of_obs(self):
+        return self._num_of_obs
+
+    def set_num_of_obs(self, _num_of_obs):
+        self._num_of_obs = _num_of_obs
+
+    def get_types_of_obs(self):
+        return self._types_of_obs
+
+    def add_types_of_obs(self, _type):
+        self._types_of_obs.append(_type)

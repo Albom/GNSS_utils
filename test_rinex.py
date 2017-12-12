@@ -10,4 +10,6 @@ import gnss.coord as coord
 
 
 r = rinex.read_obs('./data/BASE307L.17O')
-print(coord.geo(**r['header'].get_pos()))
+header = r['header']
+print(coord.geo(**header.get_pos()))
+print(header.get_num_of_obs(), header.get_types_of_obs())
