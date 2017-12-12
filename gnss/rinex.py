@@ -5,32 +5,7 @@
 RINEX files parsing.
 '''
 
-
-class Header:
-    RINEX_VERSION_TYPE = 'RINEX VERSION / TYPE'
-    PGM_RUN_BY_DATE = 'PGM / RUN BY / DATE'
-    COMMENT = 'COMMENT'
-    MARKER_NAME = 'MARKER NAME'
-    MARKER_NUMBER = 'MARKER NUMBER'
-    OBSERVER_AGENCY = 'OBSERVER / AGENCY'
-    REC_TYPE_VERS = 'REC # / TYPE / VERS'
-    ANT_TYPE = 'ANT # / TYPE'
-    APPROX_POSITION_XYZ = 'APPROX POSITION XYZ'
-    ANTENNA_DELTA_H_E_N = 'ANTENNA: DELTA H/E/N'
-    WAVELENGTH_FACT_L1_2 = 'WAVELENGTH FACT L1/2'
-    TYPES_OF_OBSERV = '# / TYPES OF OBSERV'
-    INTERVAL = 'INTERVAL'
-    TIME_OF_FIRST_OBS = 'TIME OF FIRST OBS'
-    TIME_OF_LAST_OBS = 'TIME OF LAST OBS'
-    LEAP_SECONDS = 'LEAP SECONDS'
-    END_OF_HEADER = 'END OF HEADER'
-    _version = ''
-
-    def get_version(self):
-        return self._version
-
-    def set_version(self, version):
-        self._version = version
+from gnss.header import Header as Header
 
 
 def read_obs(filename):
@@ -45,7 +20,14 @@ def read_obs(filename):
             break
         elif description == Header.RINEX_VERSION_TYPE:
             header.set_version(line[:9].strip())
+            header.set_type(line[20:21])
+            if header.get_type() != 'O':
+                return {}
+        elif description == Header.APPROX_POSITION_XYZ:
+            d = 14
+            header.set_pos({'x': float(line[:d]),
+                            'y': float(line[d:2*d]),
+                            'z': float(line[2*d:3*d])})
         i += 1
 
-    print(header.get_version())
-    return
+    return {'header': header}

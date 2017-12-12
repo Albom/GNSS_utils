@@ -6,6 +6,8 @@ Tests of RINEX files parsing.
 '''
 
 import gnss.rinex as rinex
+import gnss.coord as coord
 
 
-rinex.read_obs('./data/BASE307L.17O')
+r = rinex.read_obs('./data/BASE307L.17O')
+print(coord.geo(**r['header'].get_pos()))
