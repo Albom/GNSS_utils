@@ -7,11 +7,13 @@ RINEX files parsing.
 
 from gnss.header import Header as Header
 from _datetime import datetime
+import re
 
 
 def read_obs(filename):
     with open(filename, 'r', encoding='utf-8') as file:
         lines = file.readlines()
+    length = len(lines)
     header = Header()
     n = 0
     while True:
@@ -43,6 +45,18 @@ def read_obs(filename):
     data = []
     while n < len(lines):
         line = lines[n]
+
+        # skip comments
+        description = line[60:-1].strip()
+        if description == Header.COMMENT:
+            n += 1
+            continue
+
+        # skip bad lines
+        if not re.match(' \d\d', line):
+            n += 1
+            continue
+
         year = int(line[1:3])
         year += 2000 if year < 80 else 1900
         month = int(line[4:6])
@@ -51,8 +65,35 @@ def read_obs(filename):
         mm = int(line[13:15])
         ss = float(line[15:26])
         date = datetime(year, month, day, hh, mm, int(ss), int((ss % 1) * 1e6))
+
         num_of_sat = int(line[30:32])
-        data.append({'date': date, 'num': num_of_sat})
-        n += num_of_sat * 2 + 1 + (1 if num_of_sat > 12 else 0)
+        satellites = []
+        while len(satellites) < num_of_sat:
+            for i in range(0, 12):
+                if (len(satellites) < num_of_sat):
+                    sat = line[32 + i * 3:35 + i * 3]
+                    if len(sat) > 0:
+                        satellites.append(sat)
+            n += 1
+            line = lines[n]
+
+        all_parameters = {}
+        for s in satellites:
+            param = []
+            while len(param) < header.get_num_of_obs():
+                for i in range(0, 5):
+                    if (len(param) < header.get_num_of_obs()):
+                        obs = line[i * 16:i * 16 + 14].strip()
+                        obs = float(obs) if len(obs) > 0 else None
+                        param.append(obs)
+                if (n < length - 1):
+                    n += 1
+                    line = lines[n]
+            all_parameters[s] = param
+
+        data.append({'date': date,
+                     'num': num_of_sat,
+                     'sat': satellites,
+                     'param': all_parameters})
 
     return {'header': header, 'data': data}

@@ -13,3 +13,6 @@ r = rinex.read_obs('./data/BASE307L.17O')
 header = r['header']
 print(coord.geo(**header.get_pos()))
 print(header.get_num_of_obs(), header.get_types_of_obs())
+data = r['data']
+print(len(data))
+print(data[0])
