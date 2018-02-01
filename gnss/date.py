@@ -8,7 +8,7 @@ Date utils.
 import datetime
 
 
-def week(year, month, day):
+def gpswk(year, month, day):
     d = datetime.date(year, month, day)
     e = datetime.date(1980, 1, 13)
     diff = d-e
