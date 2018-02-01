@@ -26,7 +26,7 @@ def read_obs(filename):
             header.set_version(line[:9].strip())
             header.set_type(line[20:21])
             if header.get_type() != 'O':
-                return {}
+                return {'header': header}
         elif description == Header.APPROX_POSITION_XYZ:
             d = 14
             header.set_pos({'x': float(line[:d]),
