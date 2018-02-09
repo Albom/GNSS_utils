@@ -6,4 +6,5 @@ Tests of date utils.
 
 import gnss.date as date
 
-print(date.gpswk(2017, 12, 7))
+if __name__ == '__main__':
+    print(date.gpswk(2017, 12, 7))
