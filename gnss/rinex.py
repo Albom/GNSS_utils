@@ -43,7 +43,7 @@ def read_obs(filename):
                     header.add_types_of_obs(obs)
 
     data = []
-    while n < len(lines):
+    while n < length:
         line = lines[n]
 
         # skip comments
