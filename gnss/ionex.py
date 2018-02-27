@@ -78,3 +78,15 @@ def read_ionex(filename):
 
     return tuple(result)
 
+
+# plot 'd:/tec.txt' using 2:1:3 w image, 'world_110m.txt' with line
+def gnuplot(tec_maps, record, filename):
+    with open(filename, 'w', encoding='utf-8') as file:
+        one_map = tec_maps[record]
+        for d in one_map['data']:
+            for n_long, tec in enumerate(d['tec']):
+                lat = d['params'][0]
+                long = d['params'][1] + n_long * d['params'][3]
+                tec /= 10.0
+                file.write('{} {} {}\n'.format(lat, long, tec))
+            file.write('\n')
