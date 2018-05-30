@@ -80,8 +80,8 @@ def read_ionex(filename):
 
 
 # plot 'd:/tec.txt' using 2:1:3 w image, 'world_110m.txt' with line
-def gnuplot(tec_maps, record, filename):
-    with open(filename, 'w', encoding='utf-8') as file:
+def gnuplot(tec_maps, record, filename, append=False):
+    with open(filename, 'a' if append else 'w', encoding='utf-8') as file:
         one_map = tec_maps[record]
         for d in one_map['data']:
             for n_long, tec in enumerate(d['tec']):
