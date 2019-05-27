@@ -1,12 +1,12 @@
 
 '''
-(c) 2017 Oleksandr Bogomaz
+(c) 2017-2019 Oleksandr Bogomaz
 
 RINEX files parsing.
 '''
 
 from gnss.header import Header as Header
-from _datetime import datetime
+from datetime import datetime
 import re
 
 
@@ -19,7 +19,7 @@ def read_obs(filename):
     while True:
         line = lines[n]
         n += 1
-        description = line[60:-1].strip()
+        description = line[60:].strip()
         if description == Header.END_OF_HEADER:
             break
         elif description == Header.RINEX_VERSION_TYPE:
@@ -37,7 +37,7 @@ def read_obs(filename):
             num_of_obs = int(num_of_obs) if len(num_of_obs) > 0 else 0
             if num_of_obs > 0:
                 header.set_num_of_obs(num_of_obs)
-            for i in range(0, 9):
+            for i in range(9):
                 if len(header.get_types_of_obs()) < header.get_num_of_obs():
                     obs = line[6 + 6 * i:6 + 6 * (i + 1)].strip()
                     header.add_types_of_obs(obs)
@@ -47,7 +47,7 @@ def read_obs(filename):
         line = lines[n]
 
         # skip comments
-        description = line[60:-1].strip()
+        description = line[60:].strip()
         if description == Header.COMMENT:
             n += 1
             continue
@@ -69,11 +69,12 @@ def read_obs(filename):
         num_of_sat = int(line[30:32])
         satellites = []
         while len(satellites) < num_of_sat:
-            for i in range(0, 12):
-                if (len(satellites) < num_of_sat):
-                    sat = line[32 + i * 3:35 + i * 3]
-                    if len(sat) > 0:
-                        satellites.append(sat)
+            s = line[32:].strip()
+            ns = len(s)//3
+            for i in range(ns):
+                sat = line[32 + i * 3:35 + i * 3]
+                if sat:
+                    satellites.append(sat)
             n += 1
             line = lines[n]
 
@@ -84,7 +85,7 @@ def read_obs(filename):
                 for i in range(0, 5):
                     if (len(param) < header.get_num_of_obs()):
                         obs = line[i * 16:i * 16 + 14].strip()
-                        obs = float(obs) if len(obs) > 0 else None
+                        obs = float(obs) if obs else None
                         param.append(obs)
                 if (n < length - 1):
                     n += 1
