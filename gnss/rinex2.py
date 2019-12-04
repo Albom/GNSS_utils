@@ -2,19 +2,19 @@
 '''
 (c) 2017-2019 Oleksandr Bogomaz
 
-RINEX files parsing.
+RINEX 2 files parsing.
 '''
 
-from gnss.header import Header as Header
 from datetime import datetime
+from gnss.header import Header as Header
 import re
 
 
 def read_obs(filename):
+    header = Header()
     with open(filename, 'r', encoding='utf-8') as file:
         lines = file.readlines()
     length = len(lines)
-    header = Header()
     n = 0
     while True:
         line = lines[n]
@@ -98,3 +98,21 @@ def read_obs(filename):
                      'param': all_parameters})
 
     return {'header': header, 'data': data}
+
+def read_nav(filename):
+    header = Header()
+    with open(filename) as file:
+        lines = file.readlines()
+    length = len(lines)
+    n = 0
+    while True:
+        line = lines[n]
+        n += 1
+        description = line[60:].strip()
+        if description == Header.END_OF_HEADER:
+            break
+        elif description == Header.RINEX_VERSION_TYPE:
+            header.set_version(line[:9].strip())
+            header.set_type(line[20:21])
+            if header.get_type() != 'N':
+                return {'header': header}
