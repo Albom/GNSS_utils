@@ -1,8 +1,8 @@
 
 '''
-(c) 2017 Oleksandr Bogomaz
+(c) 2017-2019 Oleksandr Bogomaz
 
-RINEX header.
+RINEX 2 header.
 '''
 
 
@@ -24,38 +24,38 @@ class Header:
     TIME_OF_LAST_OBS = 'TIME OF LAST OBS'
     LEAP_SECONDS = 'LEAP SECONDS'
     END_OF_HEADER = 'END OF HEADER'
-    _version = ''
-    _type = ''
-    _pos = {'x': 0, 'y': 0, 'z': 0}
-    _num_of_obs = 0
-    _types_of_obs = []
+    __version = ''
+    __type = ''
+    __pos = {'x': 0, 'y': 0, 'z': 0}
+    __num_of_obs = 0
+    __types_of_obs = []
 
     def get_version(self):
-        return self._version
+        return self.__version
 
     def set_version(self, version):
-        self._version = version
+        self.__version = version
 
     def get_type(self):
-        return self._type
+        return self.__type
 
-    def set_type(self, _type):
-        self._type = _type
+    def set_type(self, __type):
+        self.__type = __type
 
     def get_pos(self):
-        return self._pos
+        return self.__pos
 
-    def set_pos(self, _pos):
-        self._pos = _pos
+    def set_pos(self, __pos):
+        self.__pos = __pos
 
     def get_num_of_obs(self):
-        return self._num_of_obs
+        return self.__num_of_obs
 
-    def set_num_of_obs(self, _num_of_obs):
-        self._num_of_obs = _num_of_obs
+    def set_num_of_obs(self, num_of_obs):
+        self.__num_of_obs = num_of_obs
 
     def get_types_of_obs(self):
-        return self._types_of_obs
+        return self.__types_of_obs
 
-    def add_types_of_obs(self, _type):
-        self._types_of_obs.append(_type)
+    def add_types_of_obs(self, types):
+        self.__types_of_obs.append(types)
