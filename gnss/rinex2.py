@@ -10,7 +10,7 @@ from gnss.header import Header as Header
 import re
 
 
-def read_obs(filename):
+def read_obs(filename, header_only=False):
     header = Header()
     with open(filename, 'r', encoding='utf-8') as file:
         lines = file.readlines()
@@ -45,6 +45,9 @@ def read_obs(filename):
                     header.add_types_of_obs(obs)
         elif description == Header.LEAP_SECONDS:
             header.set_leap_seconds(int(line[: 6].strip()))
+
+    if header_only:
+        return {'header': header}
 
     data = []
     while n < length:
