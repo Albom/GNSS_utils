@@ -1,6 +1,6 @@
 
 '''
-(c) 2018 Oleksandr Bogomaz
+(c) 2018-2021 Oleksandr Bogomaz
 
 Test of IONEX files parsing.
 '''
@@ -8,8 +8,8 @@ Test of IONEX files parsing.
 import gnss.ionex as ionex
 
 if __name__ == '__main__':
-    d = ionex.read_ionex('d:/codg3600.17i')
-    ionex.gnuplot(d, 0, 'd:/tec.txt')
+    d = ionex.read_ionex('data/uqrg0380.18i')
+    ionex.gnuplot(d, 0, 'tec.txt')
 
     lat = 50.0
     long = 35.0

@@ -1,11 +1,13 @@
 
 '''
-(c) 2018 Oleksandr Bogomaz
+(c) 2018-2021 Oleksandr Bogomaz
 
 IONEX files parsing.
 '''
 
-from _datetime import datetime, timedelta
+
+from datetime import datetime, timedelta
+from unlzw3 import unlzw
 
 IONEX_VERSION_TYPE = 'IONEX VERSION / TYPE'
 LAT_LON1_LON2_DLON_H = 'LAT/LON1/LON2/DLON/H'
@@ -16,24 +18,29 @@ END_OF_TEC_MAP = 'END OF TEC MAP'
 
 
 def read_ionex(filename):
-    with open(filename, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
+    if filename.endswith('.Z'):
+        with open(filename, 'rb') as file:
+            compressed_data = file.read()
+            uncompressed_data = unlzw(compressed_data).decode('utf-8')
+            lines = uncompressed_data.replace('\r\n', '\n').split('\n')
+    else:
+        with open(filename, 'rt', encoding='utf-8') as file:
+            lines = file.readlines()
     length = len(lines)
     n = 0
     while n < length:
         line = lines[n]
         n += 1
-        description = line[60:-1].strip()
+        description = line[60:].strip()
         if description == END_OF_HEADER:
             break
-
     result = []
 
     is_tec = False
     while n < length:
         line = lines[n]
         n += 1
-        description = line[60:-1].strip()
+        description = line[60:].strip()
         if description == START_OF_TEC_MAP:
             k = int(line[:6])
             data = []
@@ -70,16 +77,16 @@ def read_ionex(filename):
                     for v in t:
                         tec.append(int(v))
             data.append({'params': (lat, lon1, lon2, dlon, h),
-                        'tec': tuple(tec)})
+                        'tec': tec})
 
         if description == END_OF_TEC_MAP:
             is_tec = False
-            result.append({'i': k, 'date': date, 'data': tuple(data)})
+            result.append({'i': k, 'date': date, 'data': data})
 
-    return tuple(result)
+    return result
 
 
-# plot 'd:/tec.txt' using 2:1:3 w image, 'world_110m.txt' with line
+# plot 'tec.txt' using 2:1:3 w image, 'world_110m.txt' with line
 def gnuplot(tec_maps, record, filename, append=False):
     with open(filename, 'a' if append else 'w', encoding='utf-8') as file:
         one_map = tec_maps[record]
